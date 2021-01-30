@@ -101,11 +101,17 @@ impl EventHandler for MyGame {
 
     fn key_down_event(
         &mut self,
-        _ctx: &mut Context,
+        ctx: &mut Context,
         keycode: KeyCode,
         _keymods: KeyMods,
         _repeat: bool,
     ) {
+        // Quit by escape
+        if let KeyCode::Escape = keycode {
+            // TODO: prompt?
+            ggez::event::quit(ctx);
+        }
+
         // Currently it makes no sense, but it's fine as I have one player
         // The way this should work is by mapping a key to its player
         let rotate = match keycode {
