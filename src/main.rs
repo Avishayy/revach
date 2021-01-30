@@ -37,7 +37,8 @@ impl MyGame {
 
 impl EventHandler for MyGame {
     fn update(&mut self, _ctx: &mut Context) -> GameResult<()> {
-        // Update code here...
+        // TODO: insert clock syncing for stable framerate logic
+        // https://github.com/ggez/ggez/issues/171#issuecomment-337225240
         Ok(())
     }
 
