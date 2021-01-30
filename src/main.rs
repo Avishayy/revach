@@ -1,5 +1,6 @@
 use ggez::conf::{FullscreenType, WindowMode, WindowSetup};
 use ggez::event::{self, EventHandler};
+use ggez::timer;
 use ggez::{graphics, mint, Context, ContextBuilder, GameResult};
 
 fn main() {
@@ -37,9 +38,11 @@ impl MyGame {
 }
 
 impl EventHandler for MyGame {
-    fn update(&mut self, _ctx: &mut Context) -> GameResult<()> {
-        // TODO: insert clock syncing for stable framerate logic
-        // https://github.com/ggez/ggez/issues/171#issuecomment-337225240
+    fn update(&mut self, ctx: &mut Context) -> GameResult<()> {
+        const FPS: u32 = 60;
+
+        while timer::check_update_time(ctx, FPS) {}
+
         Ok(())
     }
 
