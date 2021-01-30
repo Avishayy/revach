@@ -1,11 +1,50 @@
+use ggez::conf::{FullscreenType, WindowMode};
 use ggez::event::{self, EventHandler};
 use ggez::{graphics, mint, Context, ContextBuilder, GameResult};
+
+// TODO: understand fuckery with windowed mode?
+// setting the width and height of the window doesn't change the resolution
+//
+// and in case of windowed fullscreen type, the window size doesn't do jack shit
+fn initialize_screen(ctx: &mut ggez::Context) -> GameResult {
+    graphics::set_mode(
+        ctx,
+        WindowMode {
+            width: 1920.0,
+            height: 1080.0,
+            borderless: false,
+            fullscreen_type: FullscreenType::True,
+            min_width: 0.0,
+            max_width: 0.0,
+            min_height: 0.0,
+            max_height: 0.0,
+            maximized: false,
+            resizable: false,
+            visible: true,
+        },
+    )?;
+
+    graphics::set_screen_coordinates(
+        ctx,
+        graphics::Rect {
+            x: 0.0,
+            y: 0.0,
+            w: 1920.0,
+            h: 1080.0,
+        },
+    )
+}
 
 fn main() {
     // Make a Context.
     let (mut ctx, event_loop) = ContextBuilder::new("Revach", "Shdodi")
         .build()
         .expect("aieee, could not create ggez context!");
+
+    match initialize_screen(&mut ctx) {
+        Err(x) => panic!(x),
+        _ => (),
+    }
 
     // Create an instance of your event handler.
     // Usually, you should provide it with the Context object to
