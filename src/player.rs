@@ -2,6 +2,7 @@ use ggez::graphics::Color;
 use glam::Vec2;
 
 const DEFAULT_SPEED: f32 = 3.0;
+const DEFAULT_RADIUS: f32 = 8.0;
 
 #[derive(Clone, Copy)]
 pub enum Rotation {
@@ -15,6 +16,7 @@ pub struct Player {
     pub speed: f32,
     pub color: Color,
     pub rotation: Option<Rotation>,
+    pub radius: f32,
 }
 
 impl Player {
@@ -25,6 +27,7 @@ impl Player {
             speed: DEFAULT_SPEED,
             color,
             rotation: None,
+            radius: DEFAULT_RADIUS,
         }
     }
 }

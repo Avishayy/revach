@@ -88,7 +88,7 @@ impl EventHandler for MyGame {
                 ctx,
                 graphics::DrawMode::fill(),
                 player.pos,
-                20.0,
+                player.radius,
                 0.000001,
                 player.color,
             )?;
