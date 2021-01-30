@@ -1,4 +1,4 @@
-use ggez::conf::{FullscreenType, WindowMode};
+use ggez::conf::{FullscreenType, WindowMode, WindowSetup};
 use ggez::event::{self, EventHandler};
 use ggez::{graphics, mint, Context, ContextBuilder, GameResult};
 
@@ -10,6 +10,7 @@ fn main() {
                 .dimensions(1920.0, 1080.0)
                 .fullscreen_type(FullscreenType::True),
         )
+        .window_setup(WindowSetup::default().vsync(true))
         .build()
         .expect("aieee, could not create ggez context!");
 
