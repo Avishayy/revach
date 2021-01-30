@@ -1,7 +1,13 @@
+mod angle;
+mod player;
+
+use getrandom::getrandom;
 use ggez::conf::{FullscreenType, WindowMode, WindowSetup};
 use ggez::event::{self, EventHandler};
 use ggez::timer;
-use ggez::{graphics, mint, Context, ContextBuilder, GameResult};
+use ggez::{graphics, Context, ContextBuilder, GameResult};
+use glam::*;
+use oorandom::Rand32;
 
 fn main() {
     // Make a Context.
@@ -25,15 +31,27 @@ fn main() {
 }
 
 struct MyGame {
-    // Your state here...
+    players: Vec<player::Player>,
+    // TODO: hold rand here
 }
 
 impl MyGame {
+    fn rand() -> Rand32 {
+        let mut seed: [u8; 8] = [0; 8];
+        getrandom(&mut seed).unwrap();
+        Rand32::new(u64::from_ne_bytes(seed))
+    }
+
     pub fn new(_ctx: &mut Context) -> MyGame {
-        // Load/create resources such as images here.
-        MyGame {
-            // ...
-        }
+        // Currently one player at a fixed position
+        let mut players = Vec::<player::Player>::new();
+        let mut rand = MyGame::rand();
+        players.push(player::Player::new(
+            Vec2::new(1920.0 / 2.0, 1080.0 / 2.0),
+            angle::random_angle(&mut rand),
+            graphics::RED,
+        ));
+        MyGame { players }
     }
 }
 
@@ -41,23 +59,30 @@ impl EventHandler for MyGame {
     fn update(&mut self, ctx: &mut Context) -> GameResult<()> {
         const FPS: u32 = 60;
 
-        while timer::check_update_time(ctx, FPS) {}
+        while timer::check_update_time(ctx, FPS) {
+            for player in &mut self.players {
+                player.pos += player.angle * player.speed;
+            }
+        }
 
         Ok(())
     }
 
     fn draw(&mut self, ctx: &mut Context) -> GameResult<()> {
         graphics::clear(ctx, graphics::BLACK);
-        let circle = graphics::Mesh::new_circle(
-            ctx,
-            graphics::DrawMode::fill(),
-            mint::Point2 { x: 200.0, y: 300.0 },
-            100.0,
-            0.000001,
-            graphics::RED,
-        )?;
-        graphics::draw(ctx, &circle, graphics::DrawParam::default())?;
-        // Draw code here...
+
+        for player in &self.players {
+            let circle = graphics::Mesh::new_circle(
+                ctx,
+                graphics::DrawMode::fill(),
+                player.pos,
+                20.0,
+                0.000001,
+                player.color,
+            )?;
+            graphics::draw(ctx, &circle, graphics::DrawParam::default())?;
+        }
+
         graphics::present(ctx)?;
         Ok(())
     }
